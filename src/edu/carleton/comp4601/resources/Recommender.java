@@ -6,6 +6,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
+import edu.carleton.comp4601.crawler.Controller;
+
 @Path("/")
 public class Recommender {
 	// Allows to insert contextual objects into the class,
@@ -19,6 +21,13 @@ public class Recommender {
 
 	public Recommender() {
 		name = "COMP4601 Recommender System V1.0: Sahaj Arora and Jennifer Franklin";
+		try {
+			Controller.intialize();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return;
 	}
 	
 	@GET
