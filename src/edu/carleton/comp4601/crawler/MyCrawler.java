@@ -142,7 +142,7 @@ public class MyCrawler extends WebCrawler {
 
 			ArrayList<Movie> movies = new ArrayList<>();
 			ArrayList<User> users = new ArrayList<>();
-			ArrayList<String> reviews = new ArrayList<>();
+			ArrayList<Review> reviews = new ArrayList<>();
 			Movie movie = null;
 			User user = null;
 
@@ -183,11 +183,15 @@ public class MyCrawler extends WebCrawler {
 					}	
 
 					Elements paragraphs = doc.select("p");
-					// int counter = 0;
+					 int counter = 0;
 					for (Element p: paragraphs) {
 						if (p.text().length() > 0) {	
-							reviews.add(p.text());
-							// counter++;
+							if (counter < users.size()) {
+								Review review = new Review(movie, users.get(counter));
+								review.setText(p.text());
+								reviews.add(review);
+							}
+							 counter++;
 							MyCrawler.paragraphsTextList.add(p.text());
 
 						}
@@ -204,20 +208,24 @@ public class MyCrawler extends WebCrawler {
 					} else if (isMoviePage) {
 						System.out.println("Users size: " + users.size());
 						System.out.println("Reviews size: " + reviews.size());
-						// Create User-Reviews map
-						HashMap<String, String> userReviews = new HashMap<>();
-						for (int i = 0; i < users.size(); i++) {
-							if (i < reviews.size()) {
-								userReviews.put(users.get(i).getUserId(), reviews.get(i));
-							}
-						}
+						
+//						// Create User-Reviews map
+//						HashMap<String, String> userReviews = new HashMap<>();
+//						for (int i = 0; i < users.size(); i++) {
+//							if (i < reviews.size()) {
+//								userReviews.put(users.get(i).getUserId(), reviews.get(i));
+//							}
+//						}
 
-						// Insert All Reviews into database
-						//						DbService.insertManyDocuments(reviews, "reviews");
-						// Set reviews to the movie object
-						movie.setReviews(userReviews);
 						// Insert the movie into database
 						DbService.insertOneDocument(movie, DbCollection.MOVIES);
+						
+						// Insert All Reviews into database
+						DbService.insertManyDocuments(reviews, "reviews");
+						
+						// Set reviews to the movie object
+//						movie.setReviews(userReviews);
+						
 					}
 				}
 
