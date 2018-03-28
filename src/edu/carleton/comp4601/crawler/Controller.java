@@ -26,7 +26,7 @@ public class Controller {
 	public static final String GRAPH = "graph";
 		
 	public static void intialize() throws Exception {
-        String crawlStorageFolder = "/data/crawl/root";
+        String crawlStorageFolder = System.getProperty("user.home")+"/.rs/";
         int numberOfCrawlers = 1;
         // public static CrawlGraph graph
         CrawlConfig config = new CrawlConfig();

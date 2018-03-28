@@ -197,10 +197,11 @@ public class MyCrawler extends WebCrawler {
 
 					// Save User/Movie/Reviews to the database
 					if (isUserPage) {
+						//TODO
 						// Set user's reviewed movies
-						user.setReviewedMovies(movies);
+						//user.setReviewedMovies(movies);
 						// Insert the user into database
-						DbService.insertOneDocument(user, DbCollection.USERS);
+						//DbService.insertOneDocument(user, DbCollection.USERS);
 					} else if (isMoviePage) {
 						System.out.println("Users size: " + users.size());
 						System.out.println("Reviews size: " + reviews.size());
