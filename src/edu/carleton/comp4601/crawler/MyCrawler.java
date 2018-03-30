@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import edu.carleton.comp4601.models.Movie;
@@ -168,66 +169,56 @@ public class MyCrawler extends WebCrawler {
 
 				if (shouldParsePage) {
 					// Get all links
-					Elements pageLinks = doc.select("a[href]");	
-					for	(Element link : pageLinks)	{	
-						// Get the value from href attribute
-						if (isUserPage) {
+					if (isUserPage) {
+						Elements pageLinks = doc.select("a[href]");	
+						for	(Element link : pageLinks)	{	
+							// Get the value from href attribute
 							String movieId = link.text();
-							String movieUrl = link.attr("abs:href");
-							movies.add(new Movie(movieId, movieUrl));
-						} else if (isMoviePage) {
-							String userId = link.text().split(".html")[0];
-							String userUrl = link.attr("abs:href");
-							users.add(new User(userId, userUrl));
-						}
-						MyCrawler.links.add(link.attr("href"));
-					}	
+							if (isId(movieId)) {
+								String movieUrl = link.attr("abs:href");
+								movies.add(new Movie(movieId, movieUrl));
+							}
+							MyCrawler.links.add(link.attr("href"));
+						}	
+					}
 
-					Elements paragraphs = doc.select("p");
-					 int counter = 0;
-					for (Element p: paragraphs) {
-						if (p.text().length() > 0) {	
-							if (counter < users.size()) {
-								Review review = new Review(movie, users.get(counter));
-								review.setText(p.text());
+					else if (isMoviePage) {
+						Matcher m = Pattern.compile("(<a href=.*</a>)\\s*<br\\s*/>\\s*<p>(.*?)</p>\\s*<br\\s*/>").matcher(content);
+						while (m.find()) {
+							Matcher m2 = Pattern.compile("<a href=.*>(.*)</a>").matcher(m.group(1));
+							if (m2.find()) {
+								// Add User
+								String userId = m2.group(1);
+								System.out.println("User id: " + m2.group(1));
+								User u = new User(userId, "");
+								users.add(u);
+								
+								// Add Review
+								Review review = new Review(movie, u);
+								review.setText(m.group(2));
 								reviews.add(review);
 							}
-							 counter++;
-							MyCrawler.paragraphsTextList.add(p.text());
-
+							//						
+							
 						}
 					}
-					MyCrawler.textElements.put("<p>", MyCrawler.paragraphsTextList);
-
 
 					// Save User/Movie/Reviews to the database
 					if (isUserPage) {
-						//TODO
 						// Set user's reviewed movies
-						//user.setReviewedMovies(movies);
+						user.setReviewedMovies(movies);
 						// Insert the user into database
-						//DbService.insertOneDocument(user, DbCollection.USERS);
+						DbService.insertOneDocument(user, DbCollection.USERS);
 					} else if (isMoviePage) {
 						System.out.println("Users size: " + users.size());
 						System.out.println("Reviews size: " + reviews.size());
-						
-//						// Create User-Reviews map
-//						HashMap<String, String> userReviews = new HashMap<>();
-//						for (int i = 0; i < users.size(); i++) {
-//							if (i < reviews.size()) {
-//								userReviews.put(users.get(i).getUserId(), reviews.get(i));
-//							}
-//						}
 
 						// Insert the movie into database
 						DbService.insertOneDocument(movie, DbCollection.MOVIES);
-						
+
 						// Insert All Reviews into database
 						DbService.insertManyDocuments(reviews, "reviews");
-						
-						// Set reviews to the movie object
-//						movie.setReviews(userReviews);
-						
+
 					}
 				}
 
@@ -246,6 +237,16 @@ public class MyCrawler extends WebCrawler {
 			}
 		}
 		logger.debug("=============");
+	}
+
+	private boolean isId(String linkText) {
+		final String MOVIE_ID_PREFIX = "B", USER_ID_PREFIX = "A";
+		if (linkText.startsWith(MOVIE_ID_PREFIX) || linkText.startsWith(USER_ID_PREFIX)) {
+			if (linkText.split(" ").length == 1) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<String> generateTags(String text) {
