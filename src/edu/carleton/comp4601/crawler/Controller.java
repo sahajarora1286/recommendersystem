@@ -50,13 +50,16 @@ public class Controller {
          * which are found in these pages
          */
         controller.addSeed("https://sikaman.dyndns.org/courses/4601/assignments/training/pages/");
-//        controller.addSeed("https://sikaman.dyndns.org/courses/4601/assignments/training/users/");
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
         controller.start(MyCrawler.class, numberOfCrawlers);
+        
+        // Crawl User Friends Network
+        controller.addSeed("https://sikaman.dyndns.org/courses/4601/assignments/training/graph/");
+        controller.start(FriendsCrawler.class, numberOfCrawlers);
         
         // Save Graph. Currently the graph is not updated in the crawler.
         byte[] bytesGraph = Marshaller.serializeObject(MyCrawler.graph);

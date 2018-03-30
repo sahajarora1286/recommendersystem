@@ -17,7 +17,16 @@ public class User extends BasicDBObject implements DBObject {
 	private String userId;
 	private ArrayList<Movie> reviewedMovies;
 	private String url;
+	private ArrayList<User> friends;
 	
+	public ArrayList<User> getFriends() {
+		return friends;
+	}
+
+	public void setFriends(ArrayList<User> friends) {
+		this.friends = friends;
+	}
+
 	public User(String userId, String url) {
 		this.userId = userId;
 		this.url = url;
