@@ -27,6 +27,7 @@ public class Controller {
 		
 	public static void intialize() throws Exception {
         String crawlStorageFolder = System.getProperty("user.home")+"/.rs/";
+        String crawlStorageFolder2 = System.getProperty("user.home")+"/.rs/friends";
         int numberOfCrawlers = 1;
         // public static CrawlGraph graph
         CrawlConfig config = new CrawlConfig();
@@ -35,6 +36,14 @@ public class Controller {
         config.setMaxPagesToFetch(10000);
         config.setMaxDownloadSize(15000000);
         config.setIncludeBinaryContentInCrawling(true);
+        
+        // public static CrawlGraph graph
+        CrawlConfig config2 = new CrawlConfig();
+        config2.setCrawlStorageFolder(crawlStorageFolder2);
+        config2.setMaxDepthOfCrawling(2);
+        config2.setMaxPagesToFetch(10000);
+        config2.setMaxDownloadSize(15000000);
+        config2.setIncludeBinaryContentInCrawling(true);       
 
         /*
          * Instantiate the controller for this crawl.
@@ -43,6 +52,8 @@ public class Controller {
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
         CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        PageFetcher pageFetcher2 = new PageFetcher(config2);
+        CrawlController controller2 = new CrawlController(config2, pageFetcher2, robotstxtServer);
 
         /*
          * For each crawl, you need to add some seed urls. These are the first
@@ -58,8 +69,8 @@ public class Controller {
         controller.start(MyCrawler.class, numberOfCrawlers);
         
         // Crawl User Friends Network
-        controller.addSeed("https://sikaman.dyndns.org/courses/4601/assignments/training/graph/");
-        controller.start(FriendsCrawler.class, numberOfCrawlers);
+        controller2.addSeed("https://sikaman.dyndns.org/courses/4601/assignments/training/graph/");
+        controller2.start(FriendsCrawler.class, numberOfCrawlers);
         
         // Save Graph. Currently the graph is not updated in the crawler.
         byte[] bytesGraph = Marshaller.serializeObject(MyCrawler.graph);

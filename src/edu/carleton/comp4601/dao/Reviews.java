@@ -40,8 +40,21 @@ public class Reviews {
 			}
 		} finally {
 			cursor.close();
-		}
-		
+		}	
+		return null;
+	}
+
+	public Review getReview(String reviewId) {
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("_id", reviewId);
+		DBCursor cursor = collection.find(searchQuery).limit(1);
+		try {
+			if (cursor.hasNext()) {
+				return (Review) cursor.next();			
+			}
+		} finally {
+			cursor.close();
+		}		
 		return null;
 	}
 	
@@ -58,9 +71,21 @@ public class Reviews {
 		} finally {
 			cursor.close();
 		}
-
 		return reviews;		
-
+	}
+	
+	public ConcurrentHashMap<String, Review> getAllReviews() {
+		DBCursor cursor = collection.find();
+		ConcurrentHashMap<String, Review> reviews = new ConcurrentHashMap<String, Review>();
+		try {
+			while(cursor.hasNext()) {
+				Review review = (Review) cursor.next();
+				reviews.put(review.getId(), review);
+			}
+		} finally {
+			cursor.close();
+		}
+		return reviews;		
 	}
 	
 	public int getMovieCount() {
