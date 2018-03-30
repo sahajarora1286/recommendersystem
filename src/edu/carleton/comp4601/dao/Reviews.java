@@ -1,6 +1,9 @@
 package edu.carleton.comp4601.dao;
 
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
+
+import org.apache.cxf.common.i18n.Exception;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
@@ -26,9 +29,10 @@ public class Reviews {
 		collection.setObjectClass(Review.class);
 	}
 	
-	public Review getReview(String movieId) {
+	public Review getReview(String userId, String movieId) {
 		BasicDBObject searchQuery = new BasicDBObject();
 		searchQuery.put("movie", movieId);
+		searchQuery.put("user", userId);
 		DBCursor cursor = collection.find(searchQuery).limit(1);
 		try {
 			if (cursor.hasNext()) {
@@ -57,6 +61,20 @@ public class Reviews {
 
 		return reviews;		
 
+	}
+	
+	public int getMovieCount() {
+		DBCursor cursor = collection.find();
+		HashSet<String> movieIds = new HashSet<String>();
+		try {
+			while(cursor.hasNext()) {
+				Review review = (Review) cursor.next();
+				movieIds.add(review.getMovie());
+			}
+		} finally {
+			cursor.close();
+		}
+		return movieIds.size();
 	}
 
 }

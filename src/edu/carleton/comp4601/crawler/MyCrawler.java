@@ -66,14 +66,14 @@ public class MyCrawler extends WebCrawler {
 		if (url.toString().contains(MOVIE_URL_PREFIX)) {
 			// Get movie id from url
 			String movieId = getIdFromUrl(url.toString());
-			System.out.println("Checking if already parsed movie page: " + movieId);
+			//System.out.println("Checking if already parsed movie page: " + movieId);
 			if (movieId.length() > 0) {
 				if (DbService.getDocumentById(movieId, DbCollection.MOVIES) == null) return true;
 			}
 		} else if (url.toString().contains(USER_URL_PREFIX)) {
 			// Get user id from url
 			String userId = getIdFromUrl(url.toString());
-			System.out.println("Checking if already parsed user page: " + userId);
+			//System.out.println("Checking if already parsed user page: " + userId);
 			if (userId.length() > 0) {
 				if (DbService.getDocumentById(userId, DbCollection.USERS) == null) return true;
 			}
@@ -107,7 +107,7 @@ public class MyCrawler extends WebCrawler {
 		String anchor = page.getWebURL().getAnchor();
 
 		Long timeTaken = System.currentTimeMillis() - MyCrawler.shouldVisitTime;
-		System.out.println("Time taken for visit: " + timeTaken);
+		//System.out.println("Time taken for visit: " + timeTaken);
 		MyCrawler.times.add(timeTaken);
 		MyCrawler.counter++;
 
@@ -151,18 +151,18 @@ public class MyCrawler extends WebCrawler {
 				String title = doc.title();
 				String content = doc.html();
 
-				System.out.println("JSOUP PARSING: ");
-				System.out.println("Document Title: " + title);
+				//System.out.println("JSOUP PARSING: ");
+				//System.out.println("Document Title: " + title);
 
 				boolean shouldParsePage = false;
 
 				if (isUserPage) {
 					user = new User(title, url);
-					System.out.println("This is a user page");
+					//System.out.println("This is a user page");
 					if (DbService.getDocumentById(title, DbCollection.USERS) == null) shouldParsePage = true;
 				} else if (isMoviePage) {
 					movie = new Movie(title, url);
-					System.out.println("This is a movie page");
+					//System.out.println("This is a movie page");
 					if (DbService.getDocumentById(title, DbCollection.MOVIES) == null) shouldParsePage = true;
 				}
 
@@ -204,9 +204,9 @@ public class MyCrawler extends WebCrawler {
 					if (isUserPage) {
 						//TODO
 						// Set user's reviewed movies
-						//user.setReviewedMovies(movies);
+						user.setReviewedMovies(movies);
 						// Insert the user into database
-						//DbService.insertOneDocument(user, DbCollection.USERS);
+						DbService.insertOneDocument(user, DbCollection.USERS);
 					} else if (isMoviePage) {
 						System.out.println("Users size: " + users.size());
 						System.out.println("Reviews size: " + reviews.size());

@@ -7,6 +7,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
 import edu.carleton.comp4601.crawler.Controller;
+import edu.carleton.comp4601.utilities.MovieClassification;
 
 @Path("/")
 public class Recommender {
@@ -23,6 +24,7 @@ public class Recommender {
 		name = "COMP4601 Recommender System V1.0: Sahaj Arora and Jennifer Franklin";
 		try {
 			Controller.intialize();
+			MovieClassification classifyMovies = new MovieClassification();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

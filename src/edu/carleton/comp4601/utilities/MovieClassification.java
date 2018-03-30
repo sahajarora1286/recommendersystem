@@ -1,6 +1,7 @@
 package edu.carleton.comp4601.utilities;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,20 +13,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import javax.servlet.ServletContext;
+
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.apache.lucene.util.Version;
 
 import edu.carleton.comp4601.dao.Movies;
 import edu.carleton.comp4601.dao.Reviews;
 import edu.carleton.comp4601.models.Movie;
 import edu.carleton.comp4601.models.Review;
-import edu.carleton.comp4601.services.DbService;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
@@ -33,10 +30,8 @@ import weka.core.Instances;
 
 public class MovieClassification {
 	public static ArrayList<String> MOVIE_GENRES = new ArrayList<String>(Arrays.asList("Action", "Adventure", "Comedy", "Drama", "Horror", "Thriller"));
-	// The file containing the stop words
-	public static String STOP_FILE = "stop.txt";
 	// The memory-resident array of stop words
-	public static ArrayList<String> STOP_WORDS;
+	public static ArrayList<String> STOP_WORDS = new ArrayList<String>(Arrays.asList("a", "able", "about", "across", "after", "all", "almost", "also", "am", "among", "an", "and", "any", "are", "as", "at", "be", "because", "been", "but", "by", "can", "cannot", "could", "dear", "did", "do", "does", "either", "else", "ever", "every", "for", "from", "get", "got", "had", "has", "have", "he", "her", "hers", "him", "his", "how", "however", "i", "if", "in", "into", "is", "it", "its", "just", "least", "let", "like", "likely", "may", "me", "might", "most", "must", "my", "neither", "no", "nor", "not", "of", "off", "often", "on", "only", "or", "other", "our", "own", "rather", "said", "say", "says", "she", "should", "since", "so", "some", "than", "that", "the", "their", "them", "then", "there", "these", "they", "this", "tis", "to", "too", "twas", "us", "wants", "was", "we", "were", "what", "when", "where", "which", "while", "who", "whom", "why", "will", "with", "would", "yet", "you", "your"));
 	// The class containing the list of pre-classified movies used for training
 	public static Keywords KEYWORDS;
 	// The memory-resident set of all movie keywords
@@ -55,9 +50,7 @@ public class MovieClassification {
 	public MovieClassification() {
 		log = Logger.getLogger("MovieClassification");
 		KEYWORDS = new Keywords();
-		readStopWords();
 		readMovieWords();
-		readGenreWordCounts();	
 		Instances instances = createTemplate();
 		train(instances);
 		try {
@@ -66,6 +59,7 @@ public class MovieClassification {
 			e.printStackTrace();
 		}
 		classify(instances);
+		log.info("movie review count: "+Reviews.getInstance().getMovieCount());
 	}
 	
 	public static void main(String[] args) {
@@ -290,7 +284,7 @@ public class MovieClassification {
 	private List<String> getKeyWordsFromFilmReviews(String filmId) {
 		ConcurrentHashMap<String, Review> reviews = Reviews.getInstance().getReviews(filmId);
 		String page = "";
- 		if(!reviews.isEmpty()) { //TODO remove once crawling code is fixed?			
+ 		if(!reviews.isEmpty()) {			
  			for(String reviewId : reviews.keySet()) {
  				page += reviews.get(reviewId).getText();
  			}
@@ -310,26 +304,7 @@ public class MovieClassification {
 		}
  		return new ArrayList<String>();
 	}
-	
-	/* 
-	 * The readStopWords method reads in all of the words which
-	 * are considered stop words (e.g., "a", "is"). There are 119
-	 * words in the stop.txt file.
-	 */
-	private void readStopWords() {
-		try {
-			Scanner s = new Scanner(new File(STOP_FILE));
-			STOP_WORDS = new ArrayList<String>();
-			while (s.hasNext()) {
-				STOP_WORDS.add(s.next());
-			}
-			s.close();
-			log.info("Read in " + STOP_WORDS.size() + " stop words.");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+		
 	private void readMovieWords() {
 		MOVIE_KEYWORDS = new HashSet<String>();
 		List<String> actions = KEYWORDS.getAction();
@@ -360,9 +335,6 @@ public class MovieClassification {
 		for (String stopWord : STOP_WORDS) {
 			MOVIE_KEYWORDS.remove(stopWord);
 		}
-	}
-	
-	private void readGenreWordCounts() {
 	}
 
 }
