@@ -1,5 +1,7 @@
 package edu.carleton.comp4601.dao;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -37,6 +39,24 @@ public class Reviews {
 		}
 		
 		return null;
+	}
+	
+	public ConcurrentHashMap<String, Review> getReviews(String movieId) {
+		BasicDBObject searchQuery = new BasicDBObject();
+		searchQuery.put("movie", movieId);
+		DBCursor cursor = collection.find(searchQuery);
+		ConcurrentHashMap<String, Review> reviews = new ConcurrentHashMap<String, Review>();
+		try {
+			while(cursor.hasNext()) {
+				Review review = (Review) cursor.next();
+				reviews.put(review.getId(), review);
+			}
+		} finally {
+			cursor.close();
+		}
+
+		return reviews;		
+
 	}
 
 }

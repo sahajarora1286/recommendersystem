@@ -1,6 +1,7 @@
 package edu.carleton.comp4601.utilities;
 
 import java.io.File;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +11,15 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
+
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.RAMDirectory;
+import org.apache.lucene.util.Version;
 
 import edu.carleton.comp4601.dao.Movies;
 import edu.carleton.comp4601.dao.Reviews;
@@ -79,10 +89,6 @@ public class MovieClassification {
 						}
 					}
 				}
-				// Remove all of the words that we don't care about
-				for (String stopWord : STOP_WORDS) {
-					movieKeywordCount.remove(stopWord);
-				}
 				if(!movieKeywordCount.keySet().isEmpty()) {
 					for (String keyword : movieKeywordCount.keySet()) {
 						di.setValue(instances.attribute(keyword), movieKeywordCount.get(keyword));
@@ -98,6 +104,7 @@ public class MovieClassification {
 				}
 			}
 		}
+		log.info("finished classifying the movies");
 	}
 	
 	private void train(Instances instances) {
@@ -281,12 +288,26 @@ public class MovieClassification {
 	}
 	
 	private List<String> getKeyWordsFromFilmReviews(String filmId) {
- 		Review review = Reviews.getInstance().getReview(filmId);
- 		if(review!=null) {
- 			String page = review.getText();
- 			String[] words = page.split("\\s");
- 			return Arrays.asList(words);
+		ConcurrentHashMap<String, Review> reviews = Reviews.getInstance().getReviews(filmId);
+		String page = "";
+ 		if(!reviews.isEmpty()) { //TODO remove once crawling code is fixed?			
+ 			for(String reviewId : reviews.keySet()) {
+ 				page += reviews.get(reviewId).getText();
+ 			}
  		}
+		try {
+			EnglishAnalyzer analyzer = new EnglishAnalyzer();
+			ArrayList<String> words = new ArrayList<String>();
+			TokenStream stream  = analyzer.tokenStream(null, new StringReader(page));
+			stream.reset();
+			while (stream.incrementToken()) {
+				words.add(stream.getAttribute(CharTermAttribute.class).toString());
+			}
+			stream.close();
+ 			return words;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
  		return new ArrayList<String>();
 	}
 	
