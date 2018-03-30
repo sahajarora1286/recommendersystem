@@ -17,7 +17,12 @@ public class Movie extends BasicDBObject implements DBObject {
 	private String reviewsText;
 	private String url;
 	private HashMap<String, String> reviews;
+	private String genre;
 	
+	public Movie() {
+		
+	}
+
 	public Movie(String movieId, String url) {
 		this.movieId = movieId;
 		this.append("_id", movieId);
@@ -38,7 +43,7 @@ public class Movie extends BasicDBObject implements DBObject {
 	}
 	
 	public String getUrl() {
-		return url;
+		return get("url").toString();
 	}
 
 	public void setUrl(String url) {
@@ -51,7 +56,7 @@ public class Movie extends BasicDBObject implements DBObject {
 	}
 
 	public String getMovieId() {
-		return movieId;
+		return get("_id").toString();
 	}
 
 	public void setMovieId(String movieId) {
@@ -76,6 +81,15 @@ public class Movie extends BasicDBObject implements DBObject {
 	public void setReviewsText(String reviewsText) {
 		this.reviewsText = reviewsText;
 //		this.append("reviewsText", reviewsText);
+	}
+	
+	public void setGenre(String genre) {
+		this.genre = genre;
+		this.append("genre", genre);
+	}
+	
+	public String getGenre() {
+		return get("genre").toString();
 	}
 	
 }

@@ -10,9 +10,14 @@ import com.mongodb.DBObject;
 @XmlRootElement
 public class Review extends BasicDBObject implements DBObject {
 	
+	private String _id;
 	private Movie movie;
 	private User user;
 	private String text;
+	
+	public Review() {
+		
+	}
 	
 	public Review (Movie movie, User user) {
 		this.movie = movie;
@@ -21,8 +26,12 @@ public class Review extends BasicDBObject implements DBObject {
 		this.put("user", user.getUserId());
 	}
 	
+	public String getId() {
+		return get("_id").toString();
+	}
+	
 	public String getText() {
-		return text;
+		return get("text").toString();
 	}
 
 	public void setText(String text) {
@@ -31,8 +40,8 @@ public class Review extends BasicDBObject implements DBObject {
 	}
 
 
-	public Movie getMovie() {
-		return movie;
+	public String getMovie() {
+		return get("movie").toString();
 	}
 
 	public void setMovie(Movie movie) {
@@ -40,8 +49,8 @@ public class Review extends BasicDBObject implements DBObject {
 		this.append("movie", movie.getMovieId());
 	}
 
-	public User getUser() {
-		return user;
+	public String getUser() {
+		return get("user").toString();
 	}
 
 	public void setUser(User user) {

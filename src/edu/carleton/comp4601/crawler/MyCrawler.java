@@ -148,7 +148,8 @@ public class MyCrawler extends WebCrawler {
 
 			try {
 				doc = Jsoup.connect(url).get();
-				String title = doc.title();	
+				String title = doc.title();
+				String content = doc.html();
 
 				System.out.println("JSOUP PARSING: ");
 				System.out.println("Document Title: " + title);
