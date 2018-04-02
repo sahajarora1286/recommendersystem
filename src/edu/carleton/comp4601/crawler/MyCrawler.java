@@ -192,14 +192,14 @@ public class MyCrawler extends WebCrawler {
 								//System.out.println("User id: " + m2.group(1));
 								User u = new User(userId, "");
 								users.add(u);
-								
+
 								// Add Review
 								Review review = new Review(movie, u);
 								review.setText(m.group(2));
 								reviews.add(review);
 							}
 							//						
-							
+
 						}
 					}
 
@@ -217,7 +217,9 @@ public class MyCrawler extends WebCrawler {
 						DbService.insertOneDocument(movie, DbCollection.MOVIES);
 
 						// Insert All Reviews into database
-						DbService.insertManyDocuments(reviews, "reviews");
+						if (reviews.size() > 0) {
+							DbService.insertManyDocuments(reviews, "reviews");
+						}
 
 					}
 				}

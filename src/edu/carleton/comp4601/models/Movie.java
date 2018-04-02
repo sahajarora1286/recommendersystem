@@ -12,6 +12,10 @@ import com.mongodb.DBObject;
 
 @XmlRootElement
 public class Movie extends BasicDBObject implements DBObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String movieId;
 //	private ArrayList<Review> reviews;
 	private String reviewsText;

@@ -1,6 +1,7 @@
 package edu.carleton.comp4601.models;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -14,6 +15,7 @@ import com.mongodb.client.MongoDatabase;
 
 @XmlRootElement
 public class User extends BasicDBObject implements DBObject {
+	private final String ID = "_id";
 	private String userId;
 	private ArrayList<Movie> reviewedMovies;
 	private String url;
@@ -71,7 +73,7 @@ public class User extends BasicDBObject implements DBObject {
 	}
 
 	public String getUserId() {
-		return userId;
+		return get(ID).toString();
 	}
 
 	public void setUserId(String userId) {
@@ -79,8 +81,8 @@ public class User extends BasicDBObject implements DBObject {
 //		this.append("_id", userId);
 	}
 
-	public ArrayList<Movie> getReviewedMovies() {
-		return reviewedMovies;
+	public List<BasicDBObject> getReviewedMovies() {
+		return (List<BasicDBObject>) get("reviewedMovies");
 	}
 
 	public void setReviewedMovies(ArrayList<Movie> reviewedMovies) {
@@ -88,6 +90,17 @@ public class User extends BasicDBObject implements DBObject {
 		this.append("reviewedMovies", reviewedMovies);
 //		this.append("reviewedMovies", reviewedMovies);
 	}
+	
+//	@Override
+//	public String toString() {
+//		String output  = "UserID: " + getUserId() + "\n";
+//		output += "Community: " + getCommunity() + "\n";
+//		output += "Movies reviewed: \n";
+//		for (Movie movie: reviewedMovies) {
+//			output += "MovieID: " + movie.getMovieId() + "\n";
+//		}
+//		return output;
+//	}
 
 	
 }

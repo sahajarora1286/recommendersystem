@@ -24,7 +24,8 @@ import weka.core.DenseInstance;
 import weka.core.Instances;
 
 public class MovieClassification {
-	public static ArrayList<String> MOVIE_GENRES = new ArrayList<String>(Arrays.asList("Action", "Adventure", "Comedy", "Drama", "Horror", "Thriller"));
+	public static ArrayList<String> MOVIE_GENRES = new ArrayList<String>(Arrays.asList(
+			Constants.ACTION, Constants.ADVENTURE, Constants.COMEDY, Constants.DRAMA, Constants.HORROR, Constants.THRILLER));
 	// The memory-resident array of stop words
 	public static ArrayList<String> STOP_WORDS = new ArrayList<String>(Arrays.asList("a", "able", "about", "across", "after", "all", "almost", "also", "am", "among", "an", "and", "any", "are", "as", "at", "be", "because", "been", "but", "by", "can", "cannot", "could", "dear", "did", "do", "does", "either", "else", "ever", "every", "for", "from", "get", "got", "had", "has", "have", "he", "her", "hers", "him", "his", "how", "however", "i", "if", "in", "into", "is", "it", "its", "just", "least", "let", "like", "likely", "may", "me", "might", "most", "must", "my", "neither", "no", "nor", "not", "of", "off", "often", "on", "only", "or", "other", "our", "own", "rather", "said", "say", "says", "she", "should", "since", "so", "some", "than", "that", "the", "their", "them", "then", "there", "these", "they", "this", "tis", "to", "too", "twas", "us", "wants", "was", "we", "were", "what", "when", "where", "which", "while", "who", "whom", "why", "will", "with", "would", "yet", "you", "your"));
 	// The class containing the list of pre-classified movies used for training
@@ -120,7 +121,7 @@ public class MovieClassification {
 			for(String keyword : ACTION_KEYWORD_COUNT.keySet()) {
 				di.setValue(instances.attribute(keyword), ACTION_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Action");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.ACTION);
 			instances.add(di);
 			log.info("no of action words: "+noActionWords+" no of distinct action words: "+distinctActionWords);
 		}
@@ -148,7 +149,7 @@ public class MovieClassification {
 				if(MOVIE_KEYWORDS.contains(keyword))
 					di.setValue(instances.attribute(keyword), ADVENTURE_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Adventure");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.ADVENTURE);
 			instances.add(di);
 			log.info("no of adventure words: "+noAdventureWords+" no of distinct adventure words: "+distinctAdventureWords);
 		}
@@ -176,7 +177,7 @@ public class MovieClassification {
 				if(MOVIE_KEYWORDS.contains(keyword))
 					di.setValue(instances.attribute(keyword), COMEDY_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Comedy");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.COMEDY);
 			instances.add(di);
 			log.info("no of comedy words: "+noComedyWords+" no of distinct comedy words: "+distinctComedyWords);
 		}
@@ -205,7 +206,7 @@ public class MovieClassification {
 				if(MOVIE_KEYWORDS.contains(keyword))
 					di.setValue(instances.attribute(keyword), DRAMA_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Drama");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.DRAMA);
 			instances.add(di);
 			log.info("no of drama words: "+noDramaWords+" no of distinct drama words: "+distinctDramaWords);
 		}
@@ -234,7 +235,7 @@ public class MovieClassification {
 				if(MOVIE_KEYWORDS.contains(keyword))
 					di.setValue(instances.attribute(keyword), HORROR_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Horror");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.HORROR);
 			instances.add(di);
 			log.info("no of horror words: "+noHorrorWords+" no of distinct horror words: "+distinctHorrorWords);
 		}
@@ -263,7 +264,7 @@ public class MovieClassification {
 				if(MOVIE_KEYWORDS.contains(keyword))
 					di.setValue(instances.attribute(keyword), THRILLER_KEYWORD_COUNT.get(keyword));
 			}			
-			di.setValue(instances.attribute("COMP4601Genre"), "Thriller");
+			di.setValue(instances.attribute("COMP4601Genre"), Constants.THRILLER);
 			instances.add(di);
 			log.info("no of thriller words: "+noThrillerWords+" no of distinct thriller words: "+distinctThrillerWords);
 		}
