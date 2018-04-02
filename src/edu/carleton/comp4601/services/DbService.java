@@ -12,6 +12,8 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 
+import edu.carleton.comp4601.utilities.DbCollection;
+
 public class DbService {
 	private static MongoClient mc;
 	private static DB database;
@@ -30,9 +32,28 @@ public class DbService {
 		establishConnection();
 	}
 	
-	public synchronized boolean resetDatabase() {
+	public synchronized boolean isClassified() {
+		return database.collectionExists(DbCollection.CLASSIFIED);
+	}
+	
+	public synchronized void dropCollection(String collectionName) {
+		DBCollection collection;
+		boolean exists = database.collectionExists(collectionName);
+		if(exists) {
+			collection = database.getCollection(collectionName);
+			collection.drop();
+		}
+	}
+	
+	public synchronized void createCollections(String collectionName) {
+		boolean exists = database.collectionExists(collectionName);
+		if(!exists) {
+			database.createCollection(collectionName, null);
+		}		
+	}
+	
+	public synchronized void resetDatabase() {
 		database.dropDatabase();
-		return true;
 	}
 	
 	public synchronized DBCollection getCollection(String collectionName) {

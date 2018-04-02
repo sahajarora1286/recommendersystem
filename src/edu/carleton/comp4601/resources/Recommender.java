@@ -27,6 +27,7 @@ import edu.carleton.comp4601.models.User;
 import edu.carleton.comp4601.services.DbService;
 import edu.carleton.comp4601.utilities.CollabrativeFiltering;
 import edu.carleton.comp4601.utilities.Constants;
+import edu.carleton.comp4601.utilities.DbCollection;
 import edu.carleton.comp4601.utilities.MovieClassification;
 import edu.carleton.comp4601.utilities.SentimentClassification;
 
@@ -47,13 +48,13 @@ public class Recommender {
 		log = Logger.getLogger("Recommender");
 		name = "COMP4601 Recommender System V1.0: Sahaj Arora and Jennifer Franklin";
 		//try {
-			//Controller.intialize("https://sikaman.dyndns.org/courses/4601/assignments/training");
-			//MovieClassification classifyMovies = new MovieClassification();
-			//SentimentClassification classifyReviewSentiments = new SentimentClassification();
-			//CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
+		//Controller.intialize("https://sikaman.dyndns.org/courses/4601/assignments/training");
+		//MovieClassification classifyMovies = new MovieClassification();
+		//SentimentClassification classifyReviewSentiments = new SentimentClassification();
+		//CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
 		//} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+		// TODO Auto-generated catch block
+		//e.printStackTrace();
 		//}
 		//return;
 	}
@@ -62,7 +63,7 @@ public class Recommender {
 	public String printName() {
 		return name;
 	}
-	
+
 	@GET
 	@Path("reset/{dir}")
 	public String resetDatabase(@PathParam("dir") String dir) {
@@ -71,9 +72,6 @@ public class Recommender {
 		DbService.getInstance().resetDatabase();
 		try {
 			Controller.intialize(dir);
-			MovieClassification classifyMovies = new MovieClassification();
-			SentimentClassification classifyReviewSentiments = new SentimentClassification();
-			CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
 			return "System initialized";
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -86,6 +84,16 @@ public class Recommender {
 	@Produces(MediaType.TEXT_HTML)
 	@Path("context")
 	public String getContextHtml() {
+		if(!DbService.getInstance().isClassified()) {
+			try {
+				MovieClassification classifyMovies = new MovieClassification();
+				SentimentClassification classifyReviewSentiments = new SentimentClassification();
+				CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
+				DbService.getInstance().createCollections(DbCollection.CLASSIFIED);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		System.out.println("Getting user profiles..");
 		StringBuffer html = new StringBuffer();
 		html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
@@ -221,53 +229,57 @@ public class Recommender {
 	@Path("fetch/{user}/{page}")
 	public String getUserMovieReview(@PathParam("user") String userId, @PathParam("page") String movieId) {
 		StringBuffer html = new StringBuffer();
-		Movie movie = Movies.getInstance().getMovie(movieId);
-		User user = Users.getInstance().getUser(userId);
-
-		// ** Content **
-		html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
-
-		if (user != null && movie != null) {
-			Review review = Reviews.getInstance().getReview(userId, movieId);
-			String userCommunity = user.getCommunity();
-			String movieGenre = movie.getGenre();
-
-			String movieHref = "<a href=\"" + movie.getUrl() + "\" target=\"_blank\">" + "<h3>Movie: " +  movieId + "</h3></a>";
-			html.append(movieHref);
-			//			html.append("<h2> Movie: " + movie.getMovieId() + " </h2>");
-			//			String userHref = "<a href=\"" + user.getUrl() + "\" target=\"_blank\">" + "User: " +  userId + "</a>";
-			//			html.append(userHref);
-			html.append("<h3> User: " + user.getUserId() + "</h3>");
-			html.append("<h3> Review: </h3>");
-			html.append("<p>" + review.getText() + "</p>");
-
-			// Divider
-			html.append("<div style=\"width: 100%; height: 2px; background:grey\"> </div>");
-
-			// ** Advertisements **
-			html.append("<h2>Advertisements</h2>");
-
-			// User community based
-			html.append("<div style=\"padding: 10px; border: 1px solid lightgrey\">");
-			html.append("<h3>Advertisement</h3>");
-			html.append("<p> This is <b>" + userCommunity + "</b> advertisement 1.");
-			html.append("</div>");
-
-			// Movie based
-			html.append("<div style=\"margin-top: 15px;padding: 10px; border: 1px solid lightgrey\">");
-			html.append("<h3>Advertisement</h3>");
-			if (userCommunity.equals(movieGenre)) {
-				html.append("<p> This is <b>" + movieGenre + "</b> advertisement 2");
-			} else {
-				html.append("<p> This is <b>" + movieGenre + "</b> advertisement 1.");
-			}
-			html.append("</div>");
+		if(!DbService.getInstance().isClassified()) {
+			html.append("<html> " + "<title>error context not called yet</title>" + "<body><h3>context must be called before fetch/{user}/{page} may be generated</body></html>");
 		} else {
-			if (user == null) html.append("<h3> User not found </h3>");
-			if (movie == null) html.append("<h3> Movie not found </h3>");
-		}
+			Movie movie = Movies.getInstance().getMovie(movieId);
+			User user = Users.getInstance().getUser(userId);
 
-		html.append("</body> </html>");
+			// ** Content **
+			html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
+
+			if (user != null && movie != null) {
+				Review review = Reviews.getInstance().getReview(userId, movieId);
+				String userCommunity = user.getCommunity();
+				String movieGenre = movie.getGenre();
+
+				String movieHref = "<a href=\"" + movie.getUrl() + "\" target=\"_blank\">" + "<h3>Movie: " +  movieId + "</h3></a>";
+				html.append(movieHref);
+				//			html.append("<h2> Movie: " + movie.getMovieId() + " </h2>");
+				//			String userHref = "<a href=\"" + user.getUrl() + "\" target=\"_blank\">" + "User: " +  userId + "</a>";
+				//			html.append(userHref);
+				html.append("<h3> User: " + user.getUserId() + "</h3>");
+				html.append("<h3> Review: </h3>");
+				html.append("<p>" + review.getText() + "</p>");
+
+				// Divider
+				html.append("<div style=\"width: 100%; height: 2px; background:grey\"> </div>");
+
+				// ** Advertisements **
+				html.append("<h2>Advertisements</h2>");
+
+				// User community based
+				html.append("<div style=\"padding: 10px; border: 1px solid lightgrey\">");
+				html.append("<h3>Advertisement</h3>");
+				html.append("<p> This is <b>" + userCommunity + "</b> advertisement 1.");
+				html.append("</div>");
+
+				// Movie based
+				html.append("<div style=\"margin-top: 15px;padding: 10px; border: 1px solid lightgrey\">");
+				html.append("<h3>Advertisement</h3>");
+				if (userCommunity.equals(movieGenre)) {
+					html.append("<p> This is <b>" + movieGenre + "</b> advertisement 2");
+				} else {
+					html.append("<p> This is <b>" + movieGenre + "</b> advertisement 1.");
+				}
+				html.append("</div>");
+			} else {
+				if (user == null) html.append("<h3> User not found </h3>");
+				if (movie == null) html.append("<h3> Movie not found </h3>");
+			}
+
+			html.append("</body> </html>");
+		}
 		return html.toString();
 	}
 

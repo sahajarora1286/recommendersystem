@@ -4,4 +4,5 @@ public class DbCollection {
 	public static final String USERS = "users";
 	public static final String MOVIES = "movies";
 	public static final String FRIENDS = "friends";
+	public static final String CLASSIFIED = "classified";
 }
