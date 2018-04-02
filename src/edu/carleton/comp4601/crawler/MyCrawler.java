@@ -112,13 +112,13 @@ public class MyCrawler extends WebCrawler {
 		MyCrawler.times.add(timeTaken);
 		MyCrawler.counter++;
 
-		logger.debug("Docid: {}", docid);
-		logger.info("URL: {}", url);
-		logger.debug("Domain: '{}'", domain);
-		logger.debug("Sub-domain: '{}'", subDomain);
-		logger.debug("Path: '{}'", path);
-		logger.debug("Parent page: {}", parentUrl);
-		logger.debug("Anchor text: {}", anchor);
+		//logger.debug("Docid: {}", docid);
+		//logger.info("URL: {}", url);
+		//logger.debug("Domain: '{}'", domain);
+		//logger.debug("Sub-domain: '{}'", subDomain);
+		//logger.debug("Path: '{}'", path);
+		//logger.debug("Parent page: {}", parentUrl);
+		//logger.debug("Anchor text: {}", anchor);
 
 		if (page.getWebURL().getURL().contains(MOVIE_URL_PREFIX)) {
 			isMoviePage = true;
@@ -133,9 +133,9 @@ public class MyCrawler extends WebCrawler {
 			String html = htmlParseData.getHtml();
 			Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
-			logger.debug("Text length: {}", text.length());
-			logger.debug("Html length: {}", html.length());
-			logger.debug("Number of outgoing links: {}", links.size());
+			//logger.debug("Text length: {}", text.length());
+			//logger.debug("Html length: {}", html.length());
+			//logger.debug("Number of outgoing links: {}", links.size());
 
 			//			updateHrefGraph(page);
 
@@ -189,7 +189,7 @@ public class MyCrawler extends WebCrawler {
 							if (m2.find()) {
 								// Add User
 								String userId = m2.group(1);
-								System.out.println("User id: " + m2.group(1));
+								//System.out.println("User id: " + m2.group(1));
 								User u = new User(userId, "");
 								users.add(u);
 								
@@ -210,8 +210,8 @@ public class MyCrawler extends WebCrawler {
 						// Insert the user into database
 						DbService.insertOneDocument(user, DbCollection.USERS);
 					} else if (isMoviePage) {
-						System.out.println("Users size: " + users.size());
-						System.out.println("Reviews size: " + reviews.size());
+						//System.out.println("Users size: " + users.size());
+						//System.out.println("Reviews size: " + reviews.size());
 
 						// Insert the movie into database
 						DbService.insertOneDocument(movie, DbCollection.MOVIES);
@@ -231,12 +231,12 @@ public class MyCrawler extends WebCrawler {
 
 		Header[] responseHeaders = page.getFetchResponseHeaders();
 		if (responseHeaders != null) {
-			logger.debug("Response headers:");
+			//logger.debug("Response headers:");
 			for (Header header : responseHeaders) {
-				logger.debug("\t{}: {}", header.getName(), header.getValue());
+				//logger.debug("\t{}: {}", header.getName(), header.getValue());
 			}
 		}
-		logger.debug("=============");
+		//logger.debug("=============");
 	}
 
 	private boolean isId(String linkText) {
@@ -297,8 +297,8 @@ public class MyCrawler extends WebCrawler {
 			e.printStackTrace();
 		}
 
-		System.out.println("<------ UPDATED GRAPH ----->");
-		System.out.println(graph.toString());
+		//System.out.println("<------ UPDATED GRAPH ----->");
+		//System.out.println(graph.toString());
 	}
 
 	//	private boolean parseNonHTMLContent(Page page) {

@@ -55,7 +55,7 @@ public class FriendsCrawler extends WebCrawler {
 		if (url.toString().contains(GRAPH_URL_PREFIX)) {
 			// Get user id from url
 			String userId = getIdFromUrl(url.toString());
-			System.out.println("Checking if already parsed user page: " + userId);
+			//System.out.println("Checking if already parsed user page: " + userId);
 			if (userId.length() > 0) {
 				if (DbService.getDocumentById(userId, DbCollection.FRIENDS) == null) return true;
 			}
@@ -89,17 +89,17 @@ public class FriendsCrawler extends WebCrawler {
 		String anchor = page.getWebURL().getAnchor();
 
 		Long timeTaken = System.currentTimeMillis() - MyCrawler.shouldVisitTime;
-		System.out.println("Time taken for visit: " + timeTaken);
+		//System.out.println("Time taken for visit: " + timeTaken);
 		MyCrawler.times.add(timeTaken);
 		MyCrawler.counter++;
 
-		logger.debug("Docid: {}", docid);
-		logger.info("URL: {}", url);
-		logger.debug("Domain: '{}'", domain);
-		logger.debug("Sub-domain: '{}'", subDomain);
-		logger.debug("Path: '{}'", path);
-		logger.debug("Parent page: {}", parentUrl);
-		logger.debug("Anchor text: {}", anchor);
+		//logger.debug("Docid: {}", docid);
+		//logger.info("URL: {}", url);
+		//logger.debug("Domain: '{}'", domain);
+		//logger.debug("Sub-domain: '{}'", subDomain);
+		//logger.debug("Path: '{}'", path);
+		//logger.debug("Parent page: {}", parentUrl);
+		//logger.debug("Anchor text: {}", anchor);
 
 		if (page.getParseData() instanceof HtmlParseData) {
 
@@ -108,9 +108,9 @@ public class FriendsCrawler extends WebCrawler {
 			String html = htmlParseData.getHtml();
 			Set<WebURL> links = htmlParseData.getOutgoingUrls();
 
-			logger.debug("Text length: {}", text.length());
-			logger.debug("Html length: {}", html.length());
-			logger.debug("Number of outgoing links: {}", links.size());
+			//logger.debug("Text length: {}", text.length());
+			//logger.debug("Html length: {}", html.length());
+			//logger.debug("Number of outgoing links: {}", links.size());
 
 			//			updateHrefGraph(page);
 
@@ -124,8 +124,8 @@ public class FriendsCrawler extends WebCrawler {
 				String title = doc.title();
 				String content = doc.html();
 
-				System.out.println("JSOUP PARSING: ");
-				System.out.println("Document Title: " + title);
+				//System.out.println("JSOUP PARSING: ");
+				//System.out.println("Document Title: " + title);
 
 				user = new User(title, url);
 
@@ -136,7 +136,7 @@ public class FriendsCrawler extends WebCrawler {
 
 					String userId = link.text();
 					if (isId(userId)) {
-						System.out.println("Adding friend id: " + userId);
+						//System.out.println("Adding friend id: " + userId);
 						friendIds.add(userId);
 					}
 
@@ -160,21 +160,21 @@ public class FriendsCrawler extends WebCrawler {
 
 		Header[] responseHeaders = page.getFetchResponseHeaders();
 		if (responseHeaders != null) {
-			logger.debug("Response headers:");
+			//logger.debug("Response headers:");
 			for (Header header : responseHeaders) {
-				logger.debug("\t{}: {}", header.getName(), header.getValue());
+				//logger.debug("\t{}: {}", header.getName(), header.getValue());
 			}
 		}
-		logger.debug("=============");
+		//logger.debug("=============");
 	}
 
 	private boolean isId(String linkText) {
 		final String MOVIE_ID_PREFIX = "B", USER_ID_PREFIX = "A";
 		if (linkText.startsWith(MOVIE_ID_PREFIX) || linkText.startsWith(USER_ID_PREFIX)) {
-			System.out.println("starts with correct prefix");
+			//System.out.println("starts with correct prefix");
 			if (linkText.split(" ").length == 1) {
-				System.out.println(linkText.split(" "));
-				System.out.println("does not contain spaces");
+				//System.out.println(linkText.split(" "));
+				//System.out.println("does not contain spaces");
 				return true;
 			}
 		}
@@ -229,7 +229,7 @@ public class FriendsCrawler extends WebCrawler {
 			e.printStackTrace();
 		}
 
-		System.out.println("<------ UPDATED GRAPH ----->");
-		System.out.println(graph.toString());
+		//System.out.println("<------ UPDATED GRAPH ----->");
+		//System.out.println(graph.toString());
 	}
 }

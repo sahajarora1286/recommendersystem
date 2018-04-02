@@ -8,6 +8,7 @@ import javax.ws.rs.core.UriInfo;
 
 import edu.carleton.comp4601.crawler.Controller;
 import edu.carleton.comp4601.utilities.MovieClassification;
+import edu.carleton.comp4601.utilities.SentimentClassification;
 
 @Path("/")
 public class Recommender {
@@ -25,6 +26,7 @@ public class Recommender {
 		try {
 			Controller.intialize();
 			MovieClassification classifyMovies = new MovieClassification();
+			SentimentClassification classifyReviewSentiments = new SentimentClassification();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

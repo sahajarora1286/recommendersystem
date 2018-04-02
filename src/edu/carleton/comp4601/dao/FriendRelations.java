@@ -1,6 +1,7 @@
 package edu.carleton.comp4601.dao;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.bson.types.ObjectId;
@@ -10,7 +11,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 
 import edu.carleton.comp4601.models.FriendRelation;
-import edu.carleton.comp4601.models.Movie;
 import edu.carleton.comp4601.services.DbService;
 import edu.carleton.comp4601.utilities.DbCollection;
 
@@ -18,12 +18,12 @@ public class FriendRelations {
 
 	DBCollection collection;
 	
-	private static Movies instance;
+	private static FriendRelations instance;
 	private final String ID = "_id";
 	
-	public static Movies getInstance() {
+	public static FriendRelations getInstance() {
 		if( instance == null )
-			instance = new Movies();
+			instance = new FriendRelations();
 		return instance;
 	}
 	
@@ -46,10 +46,10 @@ public class FriendRelations {
 		return relations;
 	}
 	
-	public ArrayList<String> getFriendsByUserId(String userId) {
+	public FriendRelation getFriendsByUserId(String userId) {
 		BasicDBObject searchQuery = new BasicDBObject(ID, new BasicDBObject("$eq", userId));
-		ArrayList<String> friends = (ArrayList<String>) collection.findOne(searchQuery);
-		return friends;
+		FriendRelation friend = (FriendRelation) collection.findOne(searchQuery);
+		return friend;
 	}
 
 

@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.cxf.common.i18n.Exception;
+import org.bson.types.ObjectId;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 
+import edu.carleton.comp4601.models.Movie;
 import edu.carleton.comp4601.models.Review;
 import edu.carleton.comp4601.services.DbService;
 
@@ -45,22 +47,29 @@ public class Reviews {
 	}
 
 	public Review getReview(String reviewId) {
+		BasicDBObject searchQuery = new BasicDBObject("_id", new ObjectId(reviewId));
+		return (Review) collection.findOne(searchQuery);
+	}
+	
+	public ConcurrentHashMap<String, Review> getMovieReviews(String movieId) {
 		BasicDBObject searchQuery = new BasicDBObject();
-		searchQuery.put("_id", reviewId);
-		DBCursor cursor = collection.find(searchQuery).limit(1);
+		searchQuery.put("movie", movieId);
+		DBCursor cursor = collection.find(searchQuery);
+		ConcurrentHashMap<String, Review> reviews = new ConcurrentHashMap<String, Review>();
 		try {
-			if (cursor.hasNext()) {
-				return (Review) cursor.next();			
+			while(cursor.hasNext()) {
+				Review review = (Review) cursor.next();
+				reviews.put(review.getId(), review);
 			}
 		} finally {
 			cursor.close();
-		}		
-		return null;
+		}
+		return reviews;		
 	}
 	
-	public ConcurrentHashMap<String, Review> getReviews(String movieId) {
+	public ConcurrentHashMap<String, Review> getUserReviews(String userId) {
 		BasicDBObject searchQuery = new BasicDBObject();
-		searchQuery.put("movie", movieId);
+		searchQuery.put("user", userId);
 		DBCursor cursor = collection.find(searchQuery);
 		ConcurrentHashMap<String, Review> reviews = new ConcurrentHashMap<String, Review>();
 		try {
@@ -100,6 +109,13 @@ public class Reviews {
 			cursor.close();
 		}
 		return movieIds.size();
+	}
+	
+	public void updateReviewSentiment(String reviewId, String sentiment) {
+		Review review = getReview(reviewId);
+		Review updatedReview = getReview(reviewId);
+		updatedReview.setSentiment(sentiment);
+		collection.update(review, updatedReview);
 	}
 
 }

@@ -2,6 +2,7 @@ package edu.carleton.comp4601.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,6 +15,10 @@ public class FriendRelation extends BasicDBObject implements DBObject {
 	private ArrayList<String> friendIds;
 	private final String ID = "_id";
 	private final String FRIEND_IDS = "friendIds";
+	
+	public FriendRelation() {
+		
+	}
 	
 	public FriendRelation (String userId, ArrayList<String> friendIds) {
 		this.userId = userId;

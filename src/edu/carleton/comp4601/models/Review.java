@@ -14,6 +14,7 @@ public class Review extends BasicDBObject implements DBObject {
 	private Movie movie;
 	private User user;
 	private String text;
+	private String sentiment;
 	
 	public Review() {
 		
@@ -28,6 +29,14 @@ public class Review extends BasicDBObject implements DBObject {
 	
 	public String getId() {
 		return get("_id").toString();
+	}
+	
+	public String getSentiment() {
+		return get("sentiment").toString();
+	}
+	
+	public void setSentiment(String sentiment) {
+		this.append("sentiment", sentiment);
 	}
 	
 	public String getText() {

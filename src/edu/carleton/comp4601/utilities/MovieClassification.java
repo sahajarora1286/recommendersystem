@@ -59,7 +59,7 @@ public class MovieClassification {
 			e.printStackTrace();
 		}
 		classify(instances);
-		log.info("movie review count: "+Reviews.getInstance().getMovieCount());
+		//log.info("movie review count: "+Reviews.getInstance().getMovieCount());
 	}
 	
 	public static void main(String[] args) {
@@ -150,7 +150,8 @@ public class MovieClassification {
 				ADVENTURE_KEYWORD_COUNT.remove(stopWord);
 			}
 			for(String keyword : ADVENTURE_KEYWORD_COUNT.keySet()) {
-				di.setValue(instances.attribute(keyword), ADVENTURE_KEYWORD_COUNT.get(keyword));
+				if(MOVIE_KEYWORDS.contains(keyword))
+					di.setValue(instances.attribute(keyword), ADVENTURE_KEYWORD_COUNT.get(keyword));
 			}			
 			di.setValue(instances.attribute("COMP4601Genre"), "Adventure");
 			instances.add(di);
@@ -177,7 +178,8 @@ public class MovieClassification {
 				COMEDY_KEYWORD_COUNT.remove(stopWord);
 			}
 			for(String keyword : COMEDY_KEYWORD_COUNT.keySet()) {
-				di.setValue(instances.attribute(keyword), COMEDY_KEYWORD_COUNT.get(keyword));
+				if(MOVIE_KEYWORDS.contains(keyword))
+					di.setValue(instances.attribute(keyword), COMEDY_KEYWORD_COUNT.get(keyword));
 			}			
 			di.setValue(instances.attribute("COMP4601Genre"), "Comedy");
 			instances.add(di);
@@ -205,7 +207,8 @@ public class MovieClassification {
 				DRAMA_KEYWORD_COUNT.remove(stopWord);
 			}
 			for(String keyword : DRAMA_KEYWORD_COUNT.keySet()) {
-				di.setValue(instances.attribute(keyword), DRAMA_KEYWORD_COUNT.get(keyword));
+				if(MOVIE_KEYWORDS.contains(keyword))
+					di.setValue(instances.attribute(keyword), DRAMA_KEYWORD_COUNT.get(keyword));
 			}			
 			di.setValue(instances.attribute("COMP4601Genre"), "Drama");
 			instances.add(di);
@@ -233,7 +236,8 @@ public class MovieClassification {
 				HORROR_KEYWORD_COUNT.remove(stopWord);
 			}
 			for(String keyword : HORROR_KEYWORD_COUNT.keySet()) {
-				di.setValue(instances.attribute(keyword), HORROR_KEYWORD_COUNT.get(keyword));
+				if(MOVIE_KEYWORDS.contains(keyword))
+					di.setValue(instances.attribute(keyword), HORROR_KEYWORD_COUNT.get(keyword));
 			}			
 			di.setValue(instances.attribute("COMP4601Genre"), "Horror");
 			instances.add(di);
@@ -261,7 +265,8 @@ public class MovieClassification {
 				THRILLER_KEYWORD_COUNT.remove(stopWord);
 			}			
 			for(String keyword : THRILLER_KEYWORD_COUNT.keySet()) {
-				di.setValue(instances.attribute(keyword), THRILLER_KEYWORD_COUNT.get(keyword));
+				if(MOVIE_KEYWORDS.contains(keyword))
+					di.setValue(instances.attribute(keyword), THRILLER_KEYWORD_COUNT.get(keyword));
 			}			
 			di.setValue(instances.attribute("COMP4601Genre"), "Thriller");
 			instances.add(di);
@@ -282,7 +287,7 @@ public class MovieClassification {
 	}
 	
 	private List<String> getKeyWordsFromFilmReviews(String filmId) {
-		ConcurrentHashMap<String, Review> reviews = Reviews.getInstance().getReviews(filmId);
+		ConcurrentHashMap<String, Review> reviews = Reviews.getInstance().getMovieReviews(filmId);
 		String page = "";
  		if(!reviews.isEmpty()) {			
  			for(String reviewId : reviews.keySet()) {

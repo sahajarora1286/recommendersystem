@@ -27,7 +27,7 @@ public class Controller {
 		
 	public static void intialize() throws Exception {
         String crawlStorageFolder = System.getProperty("user.home")+"/.rs/";
-        String crawlStorageFolder2 = System.getProperty("user.home")+"/.rs/friends";
+        String crawlStorageFolder2 = System.getProperty("user.home")+"/.rs-friends";
         int numberOfCrawlers = 1;
         // public static CrawlGraph graph
         CrawlConfig config = new CrawlConfig();
@@ -82,7 +82,7 @@ public class Controller {
         graphDoc.put("graph", bytesGraph);
         DbService.insertOneDocument(graphDoc, "graph");
         
-        DbService.closeConnection();
+        //DbService.closeConnection();
         
 //        // Initialize MongoDb database
 //        MongoClient mc;
