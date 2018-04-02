@@ -128,97 +128,102 @@ public class Recommender {
 	public String getCommunities() {
 		System.out.println("Getting communities...");
 		StringBuffer html = new StringBuffer();
-		html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
-		ArrayList<User> users = Users.getInstance().getAllUsers();
+		if(!DbService.getInstance().isClassified()) {
+			html.append("<html> " + "<title>error context not called yet</title>" + "<body><h3>context must be called before fetch/{user}/{page} may be generated</body></html>");
+		} else {
 
-		ArrayList<String> actionUsers = new ArrayList<>();
-		ArrayList<String> adventureUsers = new ArrayList<>();
-		ArrayList<String> dramaUsers = new ArrayList<>();
-		ArrayList<String> comedyUsers = new ArrayList<>();
-		ArrayList<String> horrorUsers = new ArrayList<>();
-		ArrayList<String> thrillerUsers = new ArrayList<>();
+			html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
+			ArrayList<User> users = Users.getInstance().getAllUsers();
 
-		for (User user: users) {
-			if (user.getCommunity().equals(Constants.ACTION)) actionUsers.add(user.getUserId());
-			if (user.getCommunity().equals(Constants.ADVENTURE)) adventureUsers.add(user.getUserId());
-			if (user.getCommunity().equals(Constants.DRAMA)) dramaUsers.add(user.getUserId());
-			if (user.getCommunity().equals(Constants.COMEDY)) comedyUsers.add(user.getUserId());
-			if (user.getCommunity().equals(Constants.HORROR)) horrorUsers.add(user.getUserId());
-			if (user.getCommunity().equals(Constants.THRILLER)) thrillerUsers.add(user.getUserId());
+			ArrayList<String> actionUsers = new ArrayList<>();
+			ArrayList<String> adventureUsers = new ArrayList<>();
+			ArrayList<String> dramaUsers = new ArrayList<>();
+			ArrayList<String> comedyUsers = new ArrayList<>();
+			ArrayList<String> horrorUsers = new ArrayList<>();
+			ArrayList<String> thrillerUsers = new ArrayList<>();
+
+			for (User user: users) {
+				if (user.getCommunity().equals(Constants.ACTION)) actionUsers.add(user.getUserId());
+				if (user.getCommunity().equals(Constants.ADVENTURE)) adventureUsers.add(user.getUserId());
+				if (user.getCommunity().equals(Constants.DRAMA)) dramaUsers.add(user.getUserId());
+				if (user.getCommunity().equals(Constants.COMEDY)) comedyUsers.add(user.getUserId());
+				if (user.getCommunity().equals(Constants.HORROR)) horrorUsers.add(user.getUserId());
+				if (user.getCommunity().equals(Constants.THRILLER)) thrillerUsers.add(user.getUserId());
+			}
+
+			html.append("<table border='1' style='width: 100%'>");
+			html.append("<th style='text-align: left'>Community</th> <th style='text-align: left'>Users</th>");
+
+			html.append("<tr> <td>" + Constants.ACTION + "</td> <td>");
+			// Add Action Users
+			for (int i = 0; i < actionUsers.size(); i++) {
+				String userId = actionUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < actionUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("<tr> <td>" + Constants.ADVENTURE + "</td> <td>");
+			// Add Adventure Users
+			for (int i = 0; i < adventureUsers.size(); i++) {
+				String userId = adventureUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < adventureUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("<tr> <td>" + Constants.DRAMA + "</td> <td>");
+			// Add Drama Users
+			for (int i = 0; i < dramaUsers.size(); i++) {
+				String userId = dramaUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < dramaUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("<tr> <td>" + Constants.COMEDY + "</td> <td>");
+			// Add Comedy Users
+			for (int i = 0; i < comedyUsers.size(); i++) {
+				String userId = comedyUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < comedyUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("<tr> <td>" + Constants.HORROR + "</td> <td>");
+			// Add Horror Users
+			for (int i = 0; i < horrorUsers.size(); i++) {
+				String userId = horrorUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < horrorUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("<tr> <td>" + Constants.THRILLER + "</td> <td>");
+			// Add Thriller Users
+			for (int i = 0; i < thrillerUsers.size(); i++) {
+				String userId = thrillerUsers.get(i);
+				System.out.println("User ID: " + userId);
+				html.append(userId);
+				if (i < thrillerUsers.size()-2) 
+					html.append(", ");
+			}
+			html.append("</td> </tr>");
+
+			html.append("</table>");
+
+			html.append("</body>" + "</html>");
 		}
-
-		html.append("<table border='1' style='width: 100%'>");
-		html.append("<th style='text-align: left'>Community</th> <th style='text-align: left'>Users</th>");
-
-		html.append("<tr> <td>" + Constants.ACTION + "</td> <td>");
-		// Add Action Users
-		for (int i = 0; i < actionUsers.size(); i++) {
-			String userId = actionUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < actionUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("<tr> <td>" + Constants.ADVENTURE + "</td> <td>");
-		// Add Adventure Users
-		for (int i = 0; i < adventureUsers.size(); i++) {
-			String userId = adventureUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < adventureUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("<tr> <td>" + Constants.DRAMA + "</td> <td>");
-		// Add Drama Users
-		for (int i = 0; i < dramaUsers.size(); i++) {
-			String userId = dramaUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < dramaUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("<tr> <td>" + Constants.COMEDY + "</td> <td>");
-		// Add Comedy Users
-		for (int i = 0; i < comedyUsers.size(); i++) {
-			String userId = comedyUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < comedyUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("<tr> <td>" + Constants.HORROR + "</td> <td>");
-		// Add Horror Users
-		for (int i = 0; i < horrorUsers.size(); i++) {
-			String userId = horrorUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < horrorUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("<tr> <td>" + Constants.THRILLER + "</td> <td>");
-		// Add Thriller Users
-		for (int i = 0; i < thrillerUsers.size(); i++) {
-			String userId = thrillerUsers.get(i);
-			System.out.println("User ID: " + userId);
-			html.append(userId);
-			if (i < thrillerUsers.size()-2) 
-				html.append(", ");
-		}
-		html.append("</td> </tr>");
-
-		html.append("</table>");
-
-		html.append("</body>" + "</html>");
 
 		return html.toString();
 	}
