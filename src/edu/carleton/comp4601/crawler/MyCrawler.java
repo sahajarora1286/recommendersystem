@@ -155,16 +155,16 @@ public class MyCrawler extends WebCrawler {
 				//System.out.println("JSOUP PARSING: ");
 				//System.out.println("Document Title: " + title);
 
-				boolean shouldParsePage = false;
+				boolean shouldParsePage = true;
 
 				if (isUserPage) {
 					user = new User(title, url);
 					//System.out.println("This is a user page");
-					if (DbService.getDocumentById(title, DbCollection.USERS) == null) shouldParsePage = true;
+//					if (DbService.getDocumentById(title, DbCollection.USERS) == null) shouldParsePage = true;
 				} else if (isMoviePage) {
 					movie = new Movie(title, url);
 					//System.out.println("This is a movie page");
-					if (DbService.getDocumentById(title, DbCollection.MOVIES) == null) shouldParsePage = true;
+//					if (DbService.getDocumentById(title, DbCollection.MOVIES) == null) shouldParsePage = true;
 				}
 
 				if (shouldParsePage) {
