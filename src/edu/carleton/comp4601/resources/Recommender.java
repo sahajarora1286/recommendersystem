@@ -23,6 +23,7 @@ import edu.carleton.comp4601.dao.Users;
 import edu.carleton.comp4601.models.Movie;
 import edu.carleton.comp4601.models.Review;
 import edu.carleton.comp4601.models.User;
+import edu.carleton.comp4601.services.DbService;
 import edu.carleton.comp4601.utilities.CollabrativeFiltering;
 import edu.carleton.comp4601.utilities.Constants;
 import edu.carleton.comp4601.utilities.MovieClassification;
@@ -57,6 +58,15 @@ public class Recommender {
 	@GET
 	public String printName() {
 		return name;
+	}
+	
+	@GET
+	@Path("reset")
+	public String resetDatabase() {
+		if(DbService.getInstance().resetDatabase()) {
+			return "System initialized";
+		}
+		return "Failed to initialize system";
 	}
 
 	@GET

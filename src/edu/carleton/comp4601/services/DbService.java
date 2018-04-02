@@ -30,6 +30,11 @@ public class DbService {
 		establishConnection();
 	}
 	
+	public synchronized boolean resetDatabase() {
+		database.dropDatabase();
+		return true;
+	}
+	
 	public synchronized DBCollection getCollection(String collectionName) {
 		DBCollection collection;
 		boolean exists = database.collectionExists(collectionName);
