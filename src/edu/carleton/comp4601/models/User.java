@@ -18,6 +18,20 @@ public class User extends BasicDBObject implements DBObject {
 	private ArrayList<Movie> reviewedMovies;
 	private String url;
 	private ArrayList<User> friends;
+	private String community;
+	
+	public User() {
+		
+	}
+	
+	public void setCommunity(String community) {
+		this.community = community;
+		this.append("community", community);
+	}
+	
+	public String getCommunity() {
+		return get("community").toString();
+	}
 	
 	public ArrayList<User> getFriends() {
 		return friends;

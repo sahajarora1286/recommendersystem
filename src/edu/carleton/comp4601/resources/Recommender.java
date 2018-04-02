@@ -7,6 +7,7 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.UriInfo;
 
 import edu.carleton.comp4601.crawler.Controller;
+import edu.carleton.comp4601.utilities.CollabrativeFiltering;
 import edu.carleton.comp4601.utilities.MovieClassification;
 import edu.carleton.comp4601.utilities.SentimentClassification;
 
@@ -27,6 +28,7 @@ public class Recommender {
 			Controller.intialize();
 			MovieClassification classifyMovies = new MovieClassification();
 			SentimentClassification classifyReviewSentiments = new SentimentClassification();
+			CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
