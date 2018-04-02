@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -40,19 +41,21 @@ public class Recommender {
 
 	private String name;
 	private final String REST_URL = "http://localhost:8011/COMP4601-RS/rest/rs";
+	private final Logger log;
 
 	public Recommender() {
+		log = Logger.getLogger("Recommender");
 		name = "COMP4601 Recommender System V1.0: Sahaj Arora and Jennifer Franklin";
-		try {
-//			Controller.intialize();
-//			MovieClassification classifyMovies = new MovieClassification();
-//			SentimentClassification classifyReviewSentiments = new SentimentClassification();
-//			CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
-		} catch (Exception e) {
+		//try {
+			//Controller.intialize("https://sikaman.dyndns.org/courses/4601/assignments/training");
+			//MovieClassification classifyMovies = new MovieClassification();
+			//SentimentClassification classifyReviewSentiments = new SentimentClassification();
+			//CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
+		//} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return;
+			//e.printStackTrace();
+		//}
+		//return;
 	}
 
 	@GET
@@ -61,11 +64,21 @@ public class Recommender {
 	}
 	
 	@GET
-	@Path("reset")
-	public String resetDatabase() {
-		if(DbService.getInstance().resetDatabase()) {
+	@Path("reset/{dir}")
+	public String resetDatabase(@PathParam("dir") String dir) {
+		log.info("made it to reset");
+		//NOTE use: http://localhost:8080/COMP4601-RS/rest/rs/reset/training for our default site
+		DbService.getInstance().resetDatabase();
+		try {
+			Controller.intialize(dir);
+			MovieClassification classifyMovies = new MovieClassification();
+			SentimentClassification classifyReviewSentiments = new SentimentClassification();
+			CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
 			return "System initialized";
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
+
 		return "Failed to initialize system";
 	}
 
