@@ -88,7 +88,7 @@ public class Recommender {
 				MovieClassification classifyMovies = new MovieClassification();
 				SentimentClassification classifyReviewSentiments = new SentimentClassification();
 				CollabrativeFiltering collaborativeFiltering = new CollabrativeFiltering();
-				DbService.getInstance().createCollections(DbCollection.CLASSIFIED);
+				DbService.getInstance().createCollection(DbCollection.CLASSIFIED);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

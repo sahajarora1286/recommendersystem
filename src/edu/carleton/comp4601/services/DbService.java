@@ -46,11 +46,16 @@ public class DbService {
 		}
 	}
 	
-	public synchronized void createCollections(String collectionName) {
+	public synchronized void createCollection(String collectionName) {
+		DBCollection collection;
 		boolean exists = database.collectionExists(collectionName);
 		if(!exists) {
-			database.createCollection(collectionName, null);
-		}		
+			collection = database.createCollection(collectionName, null);
+		}
+		collection = database.getCollection(collectionName);
+		BasicDBObject dummy = new BasicDBObject();
+		dummy.put("dummy", "value");
+		collection.insert(dummy, null);
 	}
 	
 	public synchronized void resetDatabase() {
