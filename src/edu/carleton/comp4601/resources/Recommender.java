@@ -129,7 +129,7 @@ public class Recommender {
 		System.out.println("Getting communities...");
 		StringBuffer html = new StringBuffer();
 		if(!DbService.getInstance().isClassified()) {
-			html.append("<html> " + "<title>error context not called yet</title>" + "<body><h3>context must be called before community may be called</body></html>");
+			html.append("<html> " + "<title>error context not called yet</title>" + "<body><h3>/context must be called before calling /community</body></html>");
 		} else {
 
 			html.append("<html> " + "<title>" + name + "</title>" + "<body>"); 
